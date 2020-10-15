@@ -1,14 +1,10 @@
-import React, { useState } from "react";
-import TableRow from "../../components/TableRow/TableRow";
-
-//To Do: 
-// Clean up Reducer naming
-// Add timeout 
+import React, { useState, useEffect, useRef } from "react";
+import PlannerRow from "../../components/PlannerRow/PlannerRow";
 
 
+const Planner = () => {
 
-const Dashboard = () => {
-
+    const inputRef = useRef();
     const [enteredIncome, setEnteredIncome] = useState(null);
     const [monthlyRent, SetMonthlyRent] = useState(0);
     const [annualRent, SetAnnualRent] = useState(0);
@@ -53,9 +49,8 @@ const Dashboard = () => {
     };
 
     const tableRows = Object.keys(budgets.category).map((catKey) => {
-        return <TableRow key={catKey} budget={budgets.category[catKey]} />;
+        return <PlannerRow key={catKey} budget={budgets.category[catKey]} />;
     });
-
 
     const incomeHandler = (income, budgets) => {
         Object.keys(budgets.category).map((catKey) => {
@@ -88,6 +83,17 @@ const Dashboard = () => {
         })
     };
 
+    useEffect(() => {
+        console.log("USE EFFECT")
+        setTimeout(() => {
+            if (enteredIncome !== null || inputRef.current.value) {
+                incomeHandler(parseInt(inputRef.current ? inputRef.current.value : 0), budgets)
+            };
+        }, 500);
+    }, [enteredIncome, budgets]);
+
+
+    console.log("RENDERING JSX")
     return (
         <>
             <div className="bg-white px-8 flex h-20 border-b border-gray-300">
@@ -101,10 +107,9 @@ const Dashboard = () => {
                         type="text"
                         placeholder="£25,000"
                         aria-label="Income"
-                        value={enteredIncome}
+                        ref={inputRef}
                         onChange={event => {
                             setEnteredIncome(event.target.value)
-                            incomeHandler(parseInt(event.target.value || 0), budgets)
                         }}
                     >
                     </input>
@@ -137,16 +142,10 @@ const Dashboard = () => {
                             <tbody className="bg-white">{tableRows}</tbody>
                         </table>
                     </div>
-                    {/* {loading && <Loading />}
-              {!loading && !projectRows[0] && (
-                <div className="text-gray-500 p-4 text-center">
-                  No projects created
-                </div>
-              )} */}
                 </div>
             </div>
         </>
     );
 };
 
-export default Dashboard;
+export default Planner;
