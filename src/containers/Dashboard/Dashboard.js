@@ -2,8 +2,6 @@ import React, { useState, useRef } from "react";
 import MonthSpendCard from '../../components/MonthSpendCard.js/MonthSpendCard'
 import SpendInputRow from '../../components/SpendInputRow/SpendInputRow'
 
-// Static design. Multiple tables 
-
 const Dashboard = () => {
     const inputRef = useRef();
     const [enteredMonth, setEnteredMonth] = useState(null);
@@ -12,7 +10,7 @@ const Dashboard = () => {
     const [enteredSpendTransport, setEnteredSpendTransport] = useState(null);
     const [enteredSpendEntertainment, setEnteredSpendEntertainment] = useState(null);
 
-    const state = {
+    const spendInput = {
         month: enteredMonth,
         category: {
             rent: enteredSpendRent,
@@ -40,12 +38,6 @@ const Dashboard = () => {
                 console.error('ERROR: NO CATEGORIES MATCHED')
         }
     };
-
-    console.log(state.month)
-    console.log(state.category.rent)
-    console.log(state.category.groceries)
-    console.log(state.category.transport)
-    console.log(state.category.entertainment)
 
     const dbObject = {
         budgets: {
@@ -160,6 +152,28 @@ const Dashboard = () => {
         },
     }
 
+    // Call Firebase DB
+
+    const addSpendHandler = spend => {
+        console.log("Fetching firebase...")
+        fetch('https://budget-app-c0755.firebaseio.com/spending.json', {
+            method: 'POST',
+            body: JSON.stringify(spend),
+            headers: { 'Content-Type': 'application/json' }
+        })
+            .then(response => {
+                console.log('RESPONSE');
+                console.log(response);
+                return response.json();
+            })
+        // .then(responseData => {
+        //     setEnteredSpendRent(prevIngredients => [
+        //         ...prevIngredients,
+        //         { id: responseData.name, ...spend }
+        //     ]);
+        // });
+    };
+
     const months = Object.keys(dbObject.spending.month).map((monthKey) => {
         return <MonthSpendCard
             key={monthKey}
@@ -180,8 +194,6 @@ const Dashboard = () => {
 
     return (
         <>
-
-
             <table className="min-w-full max-w-full">
 
                 <thead>
@@ -213,8 +225,15 @@ const Dashboard = () => {
                 </thead>
                 <tbody>
                     {inputRows}
+
                 </tbody>
             </table>
+
+            <button
+                class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+                onClick={e => {
+                    addSpendHandler(spendInput, e)
+                }}>Create</button>
 
             <div className="max-w-7xl mx-auto">
                 <div className="flex flex-col">
