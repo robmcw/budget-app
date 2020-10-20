@@ -2,31 +2,37 @@ import React from "react";
 
 const MonthSpendCard = (props) => {
 
-    const name = Object.keys(props.spending).map((catKey) => {
+    const name = Object.keys(props.spending.category).map((catKey) => {
         return <div
-            className="block px-8 py-4" >
+            className="block px-8 py-4"
+            key={props.id + catKey} >
             <div
-                className="text-sm leading-5 text-gray-900 font-semibold">
-                {props.spending[catKey].name}
+                className="text-sm leading-5 text-gray-900 font-semibold"
+            >
+                {catKey}
             </div>
         </div>
     });
 
-    const spent = Object.keys(props.spending).map((catKey) => {
+    const spent = Object.keys(props.spending.category).map((catKey) => {
         return <div
-            className="block px-8 py-4">
+            className="block px-8 py-4"
+            key={props.id + catKey} >
+
             <div
                 className="text-sm leading-5 text-gray-900 font-semibold">
-                {props.spending[catKey].spent}
+                {props.spending.category[catKey]}
             </div>
         </div>
     });
 
     return (
-        <React.Fragment key={props.month}>
-            <table className="min-w-full max-w-full">
+        <React.Fragment >
+            <table
+                className="min-w-full max-w-full"
+            >
 
-                <thead>
+                <thead >
                     <tr className="bg-white px-8 flex h-20 border-b border-gray-300">
                         <td className="font-bold text-2m block my-auto">{props.month}</td>
                     </tr>

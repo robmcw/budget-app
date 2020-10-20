@@ -9,6 +9,11 @@ const Dashboard = () => {
     const [enteredSpendGroceries, setEnteredSpendGroceries] = useState(null);
     const [enteredSpendTransport, setEnteredSpendTransport] = useState(null);
     const [enteredSpendEntertainment, setEnteredSpendEntertainment] = useState(null);
+    const [savedMonthSpend, setSavedMonthSpend] = useState([]);
+
+    console.log('SAVED MONTH SPEND')
+    console.log(savedMonthSpend)
+
 
     const spendInput = {
         month: enteredMonth,
@@ -38,6 +43,46 @@ const Dashboard = () => {
                 console.error('ERROR: NO CATEGORIES MATCHED')
         }
     };
+
+    const dbObject2 = {
+        spend: {
+            "-MK5w46zDwWYIdDPjXWc": {
+                category: {
+                    entertainment: 4,
+                    groceries: 2,
+                    rent: 1,
+                    transport: 3
+                },
+                month: "January"
+            },
+            "-MK5w6gfa-K9xcjb5-ip": {
+                category: {
+                    entertainment: 4,
+                    groceries: 2,
+                    rent: 1,
+                    transport: 3
+                },
+                month: "Feburary"
+            },
+            "-MK5w7X2JmHXBMlJuhcl": {
+                category: {
+                    entertainment: 4,
+                    groceries: 2,
+                    rent: 1,
+                    transport: 3
+                },
+                month: "March"
+            }
+        }
+    }
+
+    // dbObject.spend.${id}.month
+
+    // dbObject.spend.${id}.category.rent
+
+    // id = db.Object[id]
+
+
 
     const dbObject = {
         budgets: {
@@ -72,115 +117,121 @@ const Dashboard = () => {
                 }
             },
         },
+    };
 
-        spending: {
-            month: {
-                june: {
-                    rent: {
-                        name: "Rent",
-                        spent: 600,
-                        category: "Essential"
-                    },
-                    groceries: {
-                        name: "Groceries",
-                        spent: 150,
-                        category: "Essential"
-                    },
-                    transport: {
-                        name: "Transport",
-                        spent: 101,
-                        category: "Essential"
-                    },
-                    entertainment: {
-                        name: "Entertainment",
+    //     spending: {
+    //         month: {
+    //             june: {
+    //                 rent: {
+    //                     name: "Rent",
+    //                     spent: 600,
+    //                     category: "Essential"
+    //                 },
+    //                 groceries: {
+    //                     name: "Groceries",
+    //                     spent: 150,
+    //                     category: "Essential"
+    //                 },
+    //                 transport: {
+    //                     name: "Transport",
+    //                     spent: 101,
+    //                     category: "Essential"
+    //                 },
+    //                 entertainment: {
+    //                     name: "Entertainment",
 
-                        spent: 300,
-                        category: "Luxury"
-                    },
+    //                     spent: 300,
+    //                     category: "Luxury"
+    //                 },
 
-                },
-                july: {
+    //             },
+    //             july: {
 
-                    rent: {
-                        name: "Rent",
-                        spent: 78,
-                        category: "Essential"
-                    },
-                    groceries: {
-                        name: "Groceries",
-                        spent: 733,
-                        category: "Essential"
-                    },
-                    transport: {
-                        name: "Transport",
-                        spent: 765,
-                        category: "Essential"
-                    },
-                    entertainment: {
-                        name: "Entertainment",
-                        percentage: 12,
-                        spent: 765,
-                        category: "Luxury"
-                    },
+    //                 rent: {
+    //                     name: "Rent",
+    //                     spent: 78,
+    //                     category: "Essential"
+    //                 },
+    //                 groceries: {
+    //                     name: "Groceries",
+    //                     spent: 733,
+    //                     category: "Essential"
+    //                 },
+    //                 transport: {
+    //                     name: "Transport",
+    //                     spent: 765,
+    //                     category: "Essential"
+    //                 },
+    //                 entertainment: {
+    //                     name: "Entertainment",
+    //                     percentage: 12,
+    //                     spent: 765,
+    //                     category: "Luxury"
+    //                 },
 
-                },
-                august: {
-                    rent: {
-                        name: "Rent",
-                        spent: 800,
-                        category: "Essential"
-                    },
-                    groceries: {
-                        name: "Groceries",
-                        spent: 876,
-                        category: "Essential"
-                    },
-                    transport: {
-                        name: "Transport",
-                        spent: 844,
-                        category: "Essential"
-                    },
-                    entertainment: {
-                        name: "Entertainment",
-                        percentage: 12,
-                        spent: 843,
-                        category: "Luxury"
-                    },
+    //             },
+    //             august: {
+    //                 rent: {
+    //                     name: "Rent",
+    //                     spent: 800,
+    //                     category: "Essential"
+    //                 },
+    //                 groceries: {
+    //                     name: "Groceries",
+    //                     spent: 876,
+    //                     category: "Essential"
+    //                 },
+    //                 transport: {
+    //                     name: "Transport",
+    //                     spent: 844,
+    //                     category: "Essential"
+    //                 },
+    //                 entertainment: {
+    //                     name: "Entertainment",
+    //                     percentage: 12,
+    //                     spent: 843,
+    //                     category: "Luxury"
+    //                 },
 
-                },
-            },
-        },
-    }
+    //             },
+    //         },
+    //     },
+    // }
 
     // Call Firebase DB
 
     const addSpendHandler = spend => {
         console.log("Fetching firebase...")
-        fetch('https://budget-app-c0755.firebaseio.com/spending.json', {
+        fetch(`https://budget-app-c0755.firebaseio.com/spend.json`, {
             method: 'POST',
             body: JSON.stringify(spend),
             headers: { 'Content-Type': 'application/json' }
         })
             .then(response => {
-                console.log('RESPONSE');
-                console.log(response);
                 return response.json();
             })
-        // .then(responseData => {
-        //     setEnteredSpendRent(prevIngredients => [
-        //         ...prevIngredients,
-        //         { id: responseData.name, ...spend }
-        //     ]);
-        // });
+            .then(responseData => {
+                setSavedMonthSpend(prevInput => [
+                    ...prevInput,
+                    { id: responseData.name, ...spend }
+                ]);
+            })
     };
 
-    const months = Object.keys(dbObject.spending.month).map((monthKey) => {
+
+    const months = Object.keys(dbObject2.spend).map((id) => {
         return <MonthSpendCard
-            key={monthKey}
-            spending={dbObject.spending.month[monthKey]}
-            month={monthKey}
+            key={id}
+            spending={dbObject2.spend[id]}
+            month={dbObject2.spend[id].month}
         />;
     });
+
+    // dbObject.spend.${id}.month
+
+    // dbObject.spend.${id}.category.rent
+
+    // id = db.Object[id]
 
     //Loop through categories and produce row for each containing category name prefilld
 
@@ -230,7 +281,7 @@ const Dashboard = () => {
             </table>
 
             <button
-                class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+                className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
                 onClick={e => {
                     addSpendHandler(spendInput, e)
                 }}>Create</button>
