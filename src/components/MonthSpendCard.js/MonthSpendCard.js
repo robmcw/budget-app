@@ -26,6 +26,18 @@ const MonthSpendCard = (props) => {
         </div>
     });
 
+    const budget = Object.keys(props.budget).map((cat) => {
+        return <div
+            className="block px-8 py-4"
+            key={props.id + cat} >
+
+            <div
+                className="text-sm leading-5 text-gray-900 font-semibold">
+                {props.budget[cat].monthly}
+            </div>
+        </div>
+    });
+
     return (
         <React.Fragment >
             <table
@@ -43,6 +55,9 @@ const MonthSpendCard = (props) => {
                         <th className="w-1/2 px-8 py-4 border-b border-gray-200 bg-gray-50 text-left text-sm leading-4 font-medium text-gray-500 uppercase tracking-wider">
                             Spent
                       </th>
+                        <th className="w-1/2 px-8 py-4 border-b border-gray-200 bg-gray-50 text-left text-sm leading-4 font-medium text-gray-500 uppercase tracking-wider">
+                            Budget
+                      </th>
                     </tr>
                 </thead>
                 <tbody>
@@ -53,6 +68,9 @@ const MonthSpendCard = (props) => {
 
                         <td className="w-1/2 whitespace-no-wrap border-b border-gray-200">
                             {spent}
+                        </td>
+                        <td className="w-1/2 whitespace-no-wrap border-b border-gray-200">
+                            {budget}
                         </td>
                     </tr>
                 </tbody>

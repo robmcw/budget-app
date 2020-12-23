@@ -90,7 +90,24 @@ const Planner = () => {
                 incomeHandler(parseInt(inputRef.current ? inputRef.current.value : 0), budgets)
             };
         }, 500);
+        addBudgetHandler(budgets);
     }, [enteredIncome, budgets]);
+
+    const addBudgetHandler = budgets => {
+        // console.log(JSON.stringify(budgets))
+        console.log("Fetching firebase to POST...")
+        fetch(`https://budget-app-c0755.firebaseio.com/budgets.json`, {
+            method: 'PUT',
+            body: JSON.stringify(budgets),
+            headers: { 'Content-Type': 'application/json' }
+        })
+            .then(response => {
+                console.log(response)
+                return response.json();
+            })
+    };
+
+
 
 
     console.log("RENDERING JSX")

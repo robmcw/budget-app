@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import MonthSpendCard from '../../components/MonthSpendCard.js/MonthSpendCard'
 import SpendInputRow from '../../components/SpendInputRow/SpendInputRow'
 
@@ -9,12 +9,41 @@ const Dashboard = () => {
     const [enteredSpendGroceries, setEnteredSpendGroceries] = useState(null);
     const [enteredSpendTransport, setEnteredSpendTransport] = useState(null);
     const [enteredSpendEntertainment, setEnteredSpendEntertainment] = useState(null);
-    const [savedMonthSpend, setSavedMonthSpend] = useState([]);
+    const [savedMonthSpend, setSavedMonthSpend] = useState([
+        {
+            "-MK5w46zDwWYIdDPjXWc": {
+                category: {
+                    entertainment: 0,
+                    groceries: 0,
+                    rent: 0,
+                    transport: 0
+                },
+                month: "None"
+            },
+        }]
+    );
 
-    console.log('SAVED MONTH SPEND')
-    console.log(savedMonthSpend)
+    //Fetch data from DB 
+    useEffect(() => {
+        ("Fetching firebase to GET...")
+        fetch(`https://budget-app-c0755.firebaseio.com/spend.json`).then(reponse => reponse.json()
+        ).then(responseData => {
+            const loadedSpend = [];
+            for (const key in responseData) {
+                loadedSpend.push({
+                    [key]: {
+                        category: responseData[key].category,
+                        month: responseData[key].month,
+                    }
+                });
+            }
+            console.log(loadedSpend)
+            setSavedMonthSpend(loadedSpend)
+        })
+    }, []);
 
 
+    //Spend inputs
     const spendInput = {
         month: enteredMonth,
         category: {
@@ -24,6 +53,7 @@ const Dashboard = () => {
             entertainment: enteredSpendEntertainment
         }
     };
+
 
     const enteredSpendHandler = (input, cat) => {
         switch (cat) {
@@ -44,46 +74,7 @@ const Dashboard = () => {
         }
     };
 
-    const dbObject2 = {
-        spend: {
-            "-MK5w46zDwWYIdDPjXWc": {
-                category: {
-                    entertainment: 4,
-                    groceries: 2,
-                    rent: 1,
-                    transport: 3
-                },
-                month: "January"
-            },
-            "-MK5w6gfa-K9xcjb5-ip": {
-                category: {
-                    entertainment: 4,
-                    groceries: 2,
-                    rent: 1,
-                    transport: 3
-                },
-                month: "Feburary"
-            },
-            "-MK5w7X2JmHXBMlJuhcl": {
-                category: {
-                    entertainment: 4,
-                    groceries: 2,
-                    rent: 1,
-                    transport: 3
-                },
-                month: "March"
-            }
-        }
-    }
-
-    // dbObject.spend.${id}.month
-
-    // dbObject.spend.${id}.category.rent
-
-    // id = db.Object[id]
-
-
-
+    // Budgets (to be replaced by DB inputs from Planner page)
     const dbObject = {
         budgets: {
             category: {
@@ -119,89 +110,10 @@ const Dashboard = () => {
         },
     };
 
-    //     spending: {
-    //         month: {
-    //             june: {
-    //                 rent: {
-    //                     name: "Rent",
-    //                     spent: 600,
-    //                     category: "Essential"
-    //                 },
-    //                 groceries: {
-    //                     name: "Groceries",
-    //                     spent: 150,
-    //                     category: "Essential"
-    //                 },
-    //                 transport: {
-    //                     name: "Transport",
-    //                     spent: 101,
-    //                     category: "Essential"
-    //                 },
-    //                 entertainment: {
-    //                     name: "Entertainment",
-
-    //                     spent: 300,
-    //                     category: "Luxury"
-    //                 },
-
-    //             },
-    //             july: {
-
-    //                 rent: {
-    //                     name: "Rent",
-    //                     spent: 78,
-    //                     category: "Essential"
-    //                 },
-    //                 groceries: {
-    //                     name: "Groceries",
-    //                     spent: 733,
-    //                     category: "Essential"
-    //                 },
-    //                 transport: {
-    //                     name: "Transport",
-    //                     spent: 765,
-    //                     category: "Essential"
-    //                 },
-    //                 entertainment: {
-    //                     name: "Entertainment",
-    //                     percentage: 12,
-    //                     spent: 765,
-    //                     category: "Luxury"
-    //                 },
-
-    //             },
-    //             august: {
-    //                 rent: {
-    //                     name: "Rent",
-    //                     spent: 800,
-    //                     category: "Essential"
-    //                 },
-    //                 groceries: {
-    //                     name: "Groceries",
-    //                     spent: 876,
-    //                     category: "Essential"
-    //                 },
-    //                 transport: {
-    //                     name: "Transport",
-    //                     spent: 844,
-    //                     category: "Essential"
-    //                 },
-    //                 entertainment: {
-    //                     name: "Entertainment",
-    //                     percentage: 12,
-    //                     spent: 843,
-    //                     category: "Luxury"
-    //                 },
-
-    //             },
-    //         },
-    //     },
-    // }
-
     // Call Firebase DB
 
     const addSpendHandler = spend => {
-        console.log("Fetching firebase...")
+        console.log("Fetching firebase to POST...")
         fetch(`https://budget-app-c0755.firebaseio.com/spend.json`, {
             method: 'POST',
             body: JSON.stringify(spend),
@@ -211,29 +123,34 @@ const Dashboard = () => {
                 return response.json();
             })
             .then(responseData => {
+                console.log(spend)
                 setSavedMonthSpend(prevInput => [
                     ...prevInput,
-                    { id: responseData.name, ...spend }
+                    {
+                        "localId": {
+                            ...spend
+                        }
+                    }
                 ]);
             })
     };
 
+    const months =
+        savedMonthSpend.map(row => {
+            const id = Object.keys(row)[0];
+            const data = row[id];
+            const budget = dbObject.budgets.category
 
-    const months = Object.keys(dbObject2.spend).map((id) => {
-        return <MonthSpendCard
-            key={id}
-            spending={dbObject2.spend[id]}
-            month={dbObject2.spend[id].month}
-        />;
-    });
+            console.log(budget)
+            return <MonthSpendCard
+                key={id}
+                spending={data}
+                month={data.month}
+                budget={budget}
+            />;
+        })
 
-    // dbObject.spend.${id}.month
-
-    // dbObject.spend.${id}.category.rent
-
-    // id = db.Object[id]
-
-    //Loop through categories and produce row for each containing category name prefilld
+    console.log(months)
 
     const inputRows = Object.keys(dbObject.budgets.category).map((catKey) => {
         return <SpendInputRow
