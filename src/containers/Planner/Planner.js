@@ -5,7 +5,8 @@ import PlannerRow from "../../components/PlannerRow/PlannerRow";
 const Planner = () => {
 
     const inputRef = useRef();
-    const [enteredIncome, setEnteredIncome] = useState(null);
+    const [enteredIncome, setEnteredIncome] = useState(0);
+    const [savedIncome, setSavedIncome] = useState(0);
     const [monthlyRent, SetMonthlyRent] = useState(0);
     const [annualRent, SetAnnualRent] = useState(0);
     const [monthlyGroceries, SetMonthlyGroceries] = useState(0);
@@ -15,48 +16,72 @@ const Planner = () => {
     const [monthlyEntertainment, SetMonthlyEntertainment] = useState(0);
     const [annualEntertainment, SetAnnualEntertainment] = useState(0);
 
+    //Fetch budget data from DB and update states to update datatable
+    useEffect(() => {
+        console.log("Fetching firebase to GET budget...")
+        fetch(`https://budget-app-c0755.firebaseio.com/budgets.json`).then(reponse => reponse.json()
+        ).then(responseData => {
+            SetMonthlyRent(responseData.rent.monthly)
+            SetAnnualRent(responseData.rent.annual)
+            SetMonthlyGroceries(responseData.groceries.monthly)
+            SetAnnualGroceries(responseData.groceries.annual)
+            SetMonthlyTransport(responseData.transport.monthly)
+            SetAnnualTransport(responseData.transport.annual)
+            SetMonthlyEntertainment(responseData.entertainment.monthly)
+            SetAnnualEntertainment(responseData.entertainment.annual)
+        })
+    }, []);
+
+    useEffect(() => {
+        console.log("Fetching firebase to GET income...")
+        fetch(`https://budget-app-c0755.firebaseio.com/income.json`).then(reponse => reponse.json()
+        ).then(responseData => {
+            setSavedIncome(responseData)
+        })
+    }, []);
+
+    // Initial values, fixed percentages and object structure for budgets. 
+
     const budgets = {
-        category: {
-            rent: {
-                name: "Rent",
-                percentage: 30,
-                monthly: monthlyRent,
-                annual: annualRent,
-                category: "Essential"
-            },
-            groceries: {
-                name: "Groceries",
-                percentage: 8,
-                monthly: monthlyGroceries,
-                annual: annualGroceries,
-                category: "Essential"
-            },
-            transport: {
-                name: "Transport",
-                percentage: 4,
-                monthly: monthlyTransport,
-                annual: annualTransport,
-                category: "Essential"
-            },
-            entertainment: {
-                name: "Entertainment",
-                percentage: 12,
-                monthly: monthlyEntertainment,
-                annual: annualEntertainment,
-                category: "Luxury"
-            }
+        entertainment: {
+            name: "Entertainment",
+            percentage: 12,
+            monthly: monthlyEntertainment,
+            annual: annualEntertainment,
+            category: "Luxury"
+        },
+
+        groceries: {
+            name: "Groceries",
+            percentage: 8,
+            monthly: monthlyGroceries,
+            annual: annualGroceries,
+            category: "Essential"
+        },
+
+        rent: {
+            income: savedIncome,
+            name: "Rent",
+            percentage: 30,
+            monthly: monthlyRent,
+            annual: annualRent,
+            category: "Essential"
+        },
+        transport: {
+            name: "Transport",
+            percentage: 4,
+            monthly: monthlyTransport,
+            annual: annualTransport,
+            category: "Essential"
         },
     };
 
-    const tableRows = Object.keys(budgets.category).map((catKey) => {
-        return <PlannerRow key={catKey} budget={budgets.category[catKey]} />;
-    });
-
     const incomeHandler = (income, budgets) => {
-        Object.keys(budgets.category).map((catKey) => {
-            const newAnnual = Math.round((income / 100 * budgets.category[catKey].percentage));
+        Object.keys(budgets).map((catKey) => {
+            const newAnnual = Math.round((income / 100 * budgets[catKey].percentage));
             const newMonthly = Math.round(newAnnual / 12);
-            switch (budgets.category[catKey].name) {
+
+            switch (budgets[catKey].name) {
                 case 'Rent':
                     SetMonthlyRent(newMonthly)
                     SetAnnualRent(newAnnual)
@@ -78,23 +103,23 @@ const Planner = () => {
                     break;
 
                 default:
-                    return (console.log('Error'))
+                    return (console.error('Error'))
             }
         })
     };
 
+    // If input income changes, call incomeHandler  after a delay of 2000 m/s
     useEffect(() => {
-        console.log("USE EFFECT")
         setTimeout(() => {
-            if (enteredIncome !== null || inputRef.current.value) {
+            if (enteredIncome !== 0 || inputRef.current.value) {
                 incomeHandler(parseInt(inputRef.current ? inputRef.current.value : 0), budgets)
             };
-        }, 500);
-        addBudgetHandler(budgets);
+        }, 2000);
     }, [enteredIncome, budgets]);
 
+
+    // If user clicks SAVE, add budget to DB
     const addBudgetHandler = budgets => {
-        // console.log(JSON.stringify(budgets))
         console.log("Fetching firebase to POST...")
         fetch(`https://budget-app-c0755.firebaseio.com/budgets.json`, {
             method: 'PUT',
@@ -102,13 +127,31 @@ const Planner = () => {
             headers: { 'Content-Type': 'application/json' }
         })
             .then(response => {
-                console.log(response)
-                return response.json();
+                return response.json()
             })
     };
 
+    // If user clicks SAVE, add budget to DB (could be merged with addBudgetHandler to reduce DB calls?)
+    const addIncomeHandler = income => {
+        setTimeout(() => {
+            console.log("Fetching firebase to POST...")
+            fetch(`https://budget-app-c0755.firebaseio.com/income.json`, {
+                method: 'PUT',
+                body: JSON.stringify(income),
+                headers: { 'Content-Type': 'application/json' }
+            })
+                .then(response => {
+                    setSavedIncome(income)
+                    return response.json()
+                })
+        }, 500);
+    };
 
+    // Display budget rows on page 
 
+    const tableRows = Object.keys(budgets).map((catKey) => {
+        return <PlannerRow key={catKey} budget={budgets[catKey]} />;
+    });
 
     console.log("RENDERING JSX")
     return (
@@ -122,7 +165,7 @@ const Planner = () => {
 
                     <input className="appearance-none bg-transparent border-none w-full text-gray-700 mr-3 py-1 px-2 leading-tight focus:outline-none"
                         type="text"
-                        placeholder="£25,000"
+                        placeholder={savedIncome.toString()}
                         aria-label="Income"
                         ref={inputRef}
                         onChange={event => {
@@ -132,6 +175,16 @@ const Planner = () => {
                     </input>
                 </div>
             </form>
+
+            <button
+                className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+                onClick={e => {
+                    addIncomeHandler(enteredIncome, e)
+                    addBudgetHandler(budgets)
+                }
+                }>Save</button>
+
+
 
             <div className="max-w-7xl mx-auto">
                 <div className="flex flex-col">

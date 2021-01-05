@@ -4,6 +4,7 @@ import SpendInputRow from '../../components/SpendInputRow/SpendInputRow'
 
 const Dashboard = () => {
     const inputRef = useRef();
+    const [budget, setBudget] = useState(0);
     const [enteredMonth, setEnteredMonth] = useState(null);
     const [enteredSpendRent, setEnteredSpendRent] = useState(null);
     const [enteredSpendGroceries, setEnteredSpendGroceries] = useState(null);
@@ -25,7 +26,7 @@ const Dashboard = () => {
 
     //Fetch data from DB 
     useEffect(() => {
-        ("Fetching firebase to GET...")
+        ("Fetching firebase to GET spending...")
         fetch(`https://budget-app-c0755.firebaseio.com/spend.json`).then(reponse => reponse.json()
         ).then(responseData => {
             const loadedSpend = [];
@@ -37,8 +38,17 @@ const Dashboard = () => {
                     }
                 });
             }
-            console.log(loadedSpend)
             setSavedMonthSpend(loadedSpend)
+        })
+    }, []);
+
+    //Fetch data from DB 
+    useEffect(() => {
+        ("Fetching firebase to GET budgets...")
+        fetch(`https://budget-app-c0755.firebaseio.com/budgets.json`).then(reponse => reponse.json()
+        ).then(responseData => {
+            const budgetData = responseData;
+            setBudget(budgetData)
         })
     }, []);
 
@@ -139,9 +149,9 @@ const Dashboard = () => {
         savedMonthSpend.map(row => {
             const id = Object.keys(row)[0];
             const data = row[id];
-            const budget = dbObject.budgets.category
+            console.log(budget.category)
+            // const budget = dbObject.budgets.category
 
-            console.log(budget)
             return <MonthSpendCard
                 key={id}
                 spending={data}
@@ -149,8 +159,6 @@ const Dashboard = () => {
                 budget={budget}
             />;
         })
-
-    console.log(months)
 
     const inputRows = Object.keys(dbObject.budgets.category).map((catKey) => {
         return <SpendInputRow
