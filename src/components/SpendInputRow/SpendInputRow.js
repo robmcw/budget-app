@@ -4,16 +4,16 @@ const SpendInputRow = (props) => {
     return (
         < React.Fragment >
 
-            <tr className="hover:bg-gray-100 transition-all ease-linear duration-200 cursor-pointer" >
-                <td className="w-1/2 whitespace-no-wrap border-b border-gray-200">
+            <tr className=" h-12 hover:bg-gray-100 transition-all ease-linear duration-200 cursor-pointer text-sm leading-5 text-gray-900 font-semibold" >
+                <td className=" capitalize w-1/2 whitespace-no-wrap">
                     {props.cat}
                 </td>
 
-                <td className="w-1/2 whitespace-no-wrap border-b border-gray-200">
-                    <input className="appearance-none bg-transparent border-none w-full text-gray-700 mr-3 py-1 px-2 leading-tight focus:outline-none"
+                <td className="w-1/2 whitespace-no-wrap border-gray-200 ">
+                    <input className="text-center text-sm leading-5 text-gray-900 font-semibold appearance-none bg-transparent w-full mr-3 py-1 px-2 leading-tight focus:outline-none "
                         type="text"
-                        placeholder="Input"
-                        aria-label="Income"
+                        placeholder="0"
+                        aria-label="spending"
                         onChange={event => {
                             props.enteredSpendHandler(event.target.value, props.cat)
                         }}
@@ -21,7 +21,7 @@ const SpendInputRow = (props) => {
                     </input>
                 </td>
             </tr>
-        </React.Fragment>
+        </React.Fragment >
     );
 }
 

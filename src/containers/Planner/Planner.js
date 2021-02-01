@@ -152,18 +152,18 @@ const Planner = () => {
     const tableRows = Object.keys(budgets).map((catKey) => {
         return <PlannerRow key={catKey} budget={budgets[catKey]} />;
     });
-
-    console.log("RENDERING JSX")
     return (
         <>
-            <div className="bg-white px-8 flex h-20 border-b border-gray-300">
-                <h2 className="font-bold text-2xl block my-auto">Budget planner</h2>
+            <div className="bg-white py-2 px-4 flex h-20 border-b border-gray-300">
+                <h1 className="font-bold text-2xl block my-auto">Budget planner <span className="text-3xl" role="img" aria-label="Money emoji"> &#128202; </span></h1>
             </div>
 
             <form className="w-full max-w-sm" >
-                <div className="flex items-center border-b border-teal-500 py-2">
-
-                    <input className="appearance-none bg-transparent border-none w-full text-gray-700 mr-3 py-1 px-2 leading-tight focus:outline-none"
+                <div className="flex items-center border-teal-500 py-2">
+                    <div>
+                        <p className="py-2 pl-4 pr-0 text-gray-700 font-bold text-3xl">£</p>
+                    </div>
+                    <input className="appearance-none bg-transparent border-none w-full text-gray-700 m-3 py-1 pl-0 leading-tight focus:outline-none text-3xl font-bold"
                         type="text"
                         placeholder={savedIncome.toString()}
                         aria-label="Income"
@@ -176,26 +176,18 @@ const Planner = () => {
                 </div>
             </form>
 
-            <button
-                className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-                onClick={e => {
-                    addIncomeHandler(enteredIncome, e)
-                    addBudgetHandler(budgets)
-                }
-                }>Save</button>
-
 
 
             <div className="max-w-7xl mx-auto">
                 <div className="flex flex-col">
-                    <div className="align-middle inline-block min-w-full bg-gray-100 border-b border-gray-200">
+                    <div className="align-middle inline-block min-w-full mx-4 my-2 px-4 py2 border shadow bg-gray-100 border-gray-200">
                         <table className="min-w-full max-w-full">
                             <thead>
                                 <tr>
-                                    <th className="w-1/2 px-8 py-4 border-b border-gray-200 bg-gray-50 text-left text-sm leading-4 font-medium text-gray-500 uppercase tracking-wider">
+                                    <th className="md:w-48 px-8 py-4 border-b border-gray-200 bg-gray-50 text-left text-sm leading-4 font-medium text-gray-500 uppercase tracking-wider">
                                         Category
                       </th>
-                                    <th className="px-8 py-4 border-b border-gray-200 bg-gray-50 text-left text-sm leading-4 font-medium text-gray-500 uppercase tracking-wider">
+                                    <th className="md:w-48 px-8 py-4 border-b border-gray-200 bg-gray-50 text-left text-sm leading-4 font-medium text-gray-500 uppercase tracking-wider">
                                         Percentage
                       </th>
                                     <th className="md:w-48 px-8 py-4 border-b border-gray-200 bg-gray-50 text-left text-sm leading-4 font-medium text-gray-500 uppercase tracking-wider">
@@ -209,11 +201,20 @@ const Planner = () => {
                       </th>
                                 </tr>
                             </thead>
-                            <tbody className="bg-white">{tableRows}</tbody>
+                            <tbody className="bg-white align-middle">{tableRows}</tbody>
                         </table>
+                        <button
+                            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 m-4 rounded"
+                            onClick={e => {
+                                addIncomeHandler(enteredIncome, e)
+                                addBudgetHandler(budgets)
+                            }
+                            }>Save as budget</button>
                     </div>
                 </div>
+
             </div>
+
         </>
     );
 };

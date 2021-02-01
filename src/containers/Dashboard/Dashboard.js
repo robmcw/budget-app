@@ -1,6 +1,12 @@
 import React, { useState, useRef, useEffect } from "react";
 import MonthSpendCard from '../../components/MonthSpendCard.js/MonthSpendCard'
 import SpendInputRow from '../../components/SpendInputRow/SpendInputRow'
+import FirebaseConfig from '../../firebase.config'
+import firebase from 'firebase/app';
+require("firebase/database");
+
+// Initialize Firebase
+firebase.initializeApp(FirebaseConfig);
 
 const Dashboard = () => {
     const inputRef = useRef();
@@ -12,35 +18,48 @@ const Dashboard = () => {
     const [enteredSpendEntertainment, setEnteredSpendEntertainment] = useState(null);
     const [savedMonthSpend, setSavedMonthSpend] = useState([
         {
-            "-MK5w46zDwWYIdDPjXWc": {
-                category: {
-                    entertainment: 0,
-                    groceries: 0,
-                    rent: 0,
-                    transport: 0
-                },
-                month: "None"
+            category: {
+                entertainment: 100,
+                groceries: 200,
+                rent: 300,
+                transport: 400
             },
+            month: "April"
+
         }]
     );
 
     //Fetch data from DB 
     useEffect(() => {
-        ("Fetching firebase to GET spending...")
-        fetch(`https://budget-app-c0755.firebaseio.com/spend.json`).then(reponse => reponse.json()
-        ).then(responseData => {
-            const loadedSpend = [];
-            for (const key in responseData) {
-                loadedSpend.push({
-                    [key]: {
-                        category: responseData[key].category,
-                        month: responseData[key].month,
-                    }
+        firebase.database().ref('spend').orderByChild('/dateCreated')
+            .on('value', snapshot => {
+                console.log(snapshot)
+                let spend = [];
+                snapshot.forEach((spendSnapshot) => {
+                    spend.push(spendSnapshot.val())
                 });
-            }
-            setSavedMonthSpend(loadedSpend)
-        })
+                console.log(spend[1].category);
+                setSavedMonthSpend(spend)
+            });
+
+        // ("Fetching firebase to GET spending...")
+        // fetch(`https://budget-app-c0755.firebaseio.com/spend.json`).then(reponse => reponse.json()
+        // ).then(responseData => {
+        //     const loadedSpend = [];
+        //     for (const key in responseData) {
+        //         loadedSpend.push({
+        //             [key]: {
+        //                 category: responseData[key].category,
+        //                 month: responseData[key].month,
+        //             }
+        //         });
+        //     }
+        //     console.log(loadedSpend)
+        //     setSavedMonthSpend(loadedSpend)
+        // })
     }, []);
+
+
 
     //Fetch data from DB 
     useEffect(() => {
@@ -56,6 +75,7 @@ const Dashboard = () => {
     //Spend inputs
     const spendInput = {
         month: enteredMonth,
+        dateCreated: 0 - Date.now(),
         category: {
             rent: enteredSpendRent,
             groceries: enteredSpendGroceries,
@@ -84,7 +104,7 @@ const Dashboard = () => {
         }
     };
 
-    // Budgets (to be replaced by DB inputs from Planner page)
+
     const dbObject = {
         budgets: {
             category: {
@@ -147,10 +167,8 @@ const Dashboard = () => {
 
     const months =
         savedMonthSpend.map(row => {
-            const id = Object.keys(row)[0];
-            const data = row[id];
-            console.log(budget.category)
-            // const budget = dbObject.budgets.category
+            const data = row
+            const id = "010101"
 
             return <MonthSpendCard
                 key={id}
@@ -168,49 +186,49 @@ const Dashboard = () => {
         />;
     });
 
+
     return (
         <>
-            <table className="min-w-full max-w-full">
+            <div className="bg-white px-8 flex h-20">
+                <h1 className="font-bold text-2xl block my-auto">Monthly spending <span className="text-3xl" role="img" aria-label="Money emoji"> &#128184; </span> </h1>
+            </div>
+            <div className="max-w-7xl mx-8 my-4 px-8 py-4 border-gray-300 border rounded shadow">
+                <div className="flex flex-col">
+                    <table className="min-w-full max-w-full">
+                        <thead>
+                            <tr className="bg-white flex h-20 ">
+                                <td className="font-bold text-2m block my-auto"> New month's spending </td>
+                            </tr>
+                            <tr className="px-4 hover:bg-gray-100 transition-all ease-linear duration-200 cursor-pointer" >
+                                <td className="w-1/2 whitespace-no-wrap">
+                                    <input className=" my-4 appearance-none bg-transparent border-none w-full font-bold leading-tight focus:outline-none"
+                                        type="text"
+                                        placeholder="Write month"
+                                        aria-label="Month"
+                                        ref={inputRef}
+                                        onChange={event => {
+                                            setEnteredMonth(event.target.value)
+                                        }}
+                                    >
+                                    </input>
+                                </td>
+                            </tr>
+                        </thead>
 
-                <thead>
-                    <tr className="bg-white px-8 flex h-20 border-b border-gray-300">
-                        <td className="font-bold text-2m block my-auto">Input spending</td>
-                    </tr>
-                    <tr className="hover:bg-gray-100 transition-all ease-linear duration-200 cursor-pointer" >
-                        <td className="w-1/2 whitespace-no-wrap border-b border-gray-200">
-                            <input className="appearance-none bg-transparent border-none w-full text-gray-700 mr-3 py-1 px-2 leading-tight focus:outline-none"
-                                type="text"
-                                placeholder="Month"
-                                aria-label="Month"
-                                ref={inputRef}
-                                onChange={event => {
-                                    setEnteredMonth(event.target.value)
-                                }}
-                            >
-                            </input>
-                        </td>
-                    </tr>
-                    <tr>
-                        <th className="w-1/2 px-8 py-4 border-b border-gray-200 bg-gray-50 text-left text-sm leading-4 font-medium text-gray-500 uppercase tracking-wider">
-                            Category
-      </th>
-                        <th className="w-1/2 px-8 py-4 border-b border-gray-200 bg-gray-50 text-left text-sm leading-4 font-medium text-gray-500 uppercase tracking-wider">
-                            Spent
-      </th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {inputRows}
+                        <tbody >
+                            {inputRows}
+                        </tbody>
 
-                </tbody>
-            </table>
-
-            <button
-                className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-                onClick={e => {
-                    addSpendHandler(spendInput, e)
-                }}>Create</button>
-
+                    </table>
+                    <div className=" my-4">
+                        <button
+                            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+                            onClick={e => {
+                                addSpendHandler(spendInput, e)
+                            }}>Save</button>
+                    </div>
+                </div>
+            </div >
             <div className="max-w-7xl mx-auto">
                 <div className="flex flex-col">
                     <div className="bg-white">{months}</div>

@@ -15,14 +15,14 @@ const PlannerRow = (props) => {
 
             <td className="w-1/2 whitespace-no-wrap border-b border-gray-200">
                 <Link className="block px-8 py-4" to={`/budget/${props.budget.name}`}>
-                    <div className="text-sm leading-5 text-gray-900 font-semibold">
+                    <div className="text-sm leading-5 text-gray-900 font-semibold text-center">
                         {props.budget.percentage}
                     </div>
                 </Link>
             </td>
-            <td className="whitespace-no-wrap border-b border-gray-200 text-sm leading-5 text-gray-500">
+            <td className="w-1/2 whitespace-no-wrap border-b border-gray-200 text-sm leading-5 text-gray-500">
                 <Link className="block px-8 py-4" to={`/budget/${props.budget.name}`}>
-                    <div className="text-sm leading-5 text-gray-900 font-semibold">
+                    <div className="text-sm leading-5 text-gray-900 font-semibold text-center">
                         {props.budget.monthly}
                     </div>
                 </Link>
@@ -30,7 +30,7 @@ const PlannerRow = (props) => {
 
             <td className="whitespace-no-wrap border-b border-gray-200 text-sm leading-5 text-gray-500">
                 <Link className="block px-8 py-4" to={`/budget/${props.budget.name}`}>
-                    <div className="text-sm leading-5 text-gray-900 font-semibold">
+                    <div className="text-sm leading-5 text-gray-900 font-semibold text-center">
                         {props.budget.annual}
                     </div>
                 </Link>
@@ -38,7 +38,7 @@ const PlannerRow = (props) => {
 
             <td className="border-b border-gray-200">
                 <Link className="block px-8 py-4" to={`/project/${props.budget.name}`}>
-                    <div className="text-sm leading-5 text-gray-900 font-semibold">
+                    <div className="text-sm leading-5 text-gray-900 font-semibold text-center">
                         {props.budget.category}
                     </div>
                 </Link>

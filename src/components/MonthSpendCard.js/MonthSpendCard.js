@@ -25,7 +25,7 @@ const MonthSpendCard = (props) => {
             </div>
         </div>
     });
-    console.log(props.budget)
+
     const budget = Object.keys(props.budget).map((cat) => {
         console.log(cat)
         console.log(props.budget[cat].monthly)
@@ -42,41 +42,43 @@ const MonthSpendCard = (props) => {
 
     return (
         <React.Fragment >
-            <table
-                className="min-w-full max-w-full"
-            >
+            <div className="mx-8 my-4 px-8 py-4 border-gray-300 border rounded shadow">
+                <table
+                    className="min-w-full max-w-full"
+                >
 
-                <thead >
-                    <tr className="bg-white px-8 flex h-20 border-b border-gray-300">
-                        <td className="font-bold text-2m block my-auto">{props.month}</td>
-                    </tr>
-                    <tr>
-                        <th className="w-1/2 px-8 py-4 border-b border-gray-200 bg-gray-50 text-left text-sm leading-4 font-medium text-gray-500 uppercase tracking-wider">
-                            Category
+                    <thead >
+                        <tr className="bg-white px-8 flex h-20 ">
+                            <td className="font-bold text-2m block my-auto">{props.month}</td>
+                        </tr>
+                        <tr>
+                            <th className="w-1/2 px-8 py-4 border-b border-gray-200 bg-gray-50 text-left text-sm leading-4 font-medium text-gray-500 uppercase tracking-wider">
+                                Category
                       </th>
-                        <th className="w-1/2 px-8 py-4 border-b border-gray-200 bg-gray-50 text-left text-sm leading-4 font-medium text-gray-500 uppercase tracking-wider">
-                            Spent
+                            <th className="w-1/2 px-8 py-4 border-b border-gray-200 bg-gray-50 text-left text-sm leading-4 font-medium text-gray-500 uppercase tracking-wider">
+                                Spent
                       </th>
-                        <th className="w-1/2 px-8 py-4 border-b border-gray-200 bg-gray-50 text-left text-sm leading-4 font-medium text-gray-500 uppercase tracking-wider">
-                            Budget
+                            <th className="w-1/2 px-8 py-4 border-b border-gray-200 bg-gray-50 text-left text-sm leading-4 font-medium text-gray-500 uppercase tracking-wider">
+                                Budget
                       </th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr className="hover:bg-gray-100 transition-all ease-linear duration-200 cursor-pointer" >
-                        <td className="w-1/2 whitespace-no-wrap border-b border-gray-200">
-                            {name}
-                        </td>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr className="hover:bg-gray-100 transition-all ease-linear duration-200 cursor-pointer" >
+                            <td className="capitalize w-1/2 whitespace-no-wrap border-b border-gray-200">
+                                {name}
+                            </td>
 
-                        <td className="w-1/2 whitespace-no-wrap border-b border-gray-200">
-                            {spent}
-                        </td>
-                        <td className="w-1/2 whitespace-no-wrap border-b border-gray-200">
-                            {budget}
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
+                            <td className="w-1/2 whitespace-no-wrap border-b border-gray-200">
+                                {spent}
+                            </td>
+                            <td className="w-1/2 whitespace-no-wrap border-b border-gray-200">
+                                {budget}
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
         </React.Fragment>
     );
 }
