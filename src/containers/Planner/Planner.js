@@ -72,7 +72,7 @@ const Planner = () => {
             percentage: 4,
             monthly: monthlyTransport,
             annual: annualTransport,
-            category: "Essential"
+            category: "Savings"
         },
     };
 
@@ -178,26 +178,26 @@ const Planner = () => {
 
 
 
-            <div className="max-w-7xl mx-auto">
+            <div className="max-w-7xl mx-4 my-2 px-4 py-2">
                 <div className="flex flex-col">
-                    <div className="align-middle inline-block min-w-full mx-4 my-2 px-4 py2 border shadow bg-gray-100 border-gray-200">
-                        <table className="min-w-full max-w-full">
+                    <div className="align-middle inline-block min-w-full  bg-gray-100 ">
+                        <table className="min-w-full max-w-full border shadow border-gray-200">
                             <thead>
                                 <tr>
                                     <th className="md:w-48 px-8 py-4 border-b border-gray-200 bg-gray-50 text-left text-sm leading-4 font-medium text-gray-500 uppercase tracking-wider">
                                         Category
                       </th>
-                                    <th className="md:w-48 px-8 py-4 border-b border-gray-200 bg-gray-50 text-left text-sm leading-4 font-medium text-gray-500 uppercase tracking-wider">
+                                    <th className="md:w-48 px-8 py-4 border-b border-gray-200 bg-gray-50 text-center text-sm leading-4 font-medium text-gray-500 uppercase tracking-wider">
                                         Percentage
                       </th>
-                                    <th className="md:w-48 px-8 py-4 border-b border-gray-200 bg-gray-50 text-left text-sm leading-4 font-medium text-gray-500 uppercase tracking-wider">
+                                    <th className="md:w-48 px-8 py-4 border-b border-gray-200 bg-gray-50 text-center text-sm leading-4 font-medium text-gray-500 uppercase tracking-wider">
                                         Monthly
                       </th>
-                                    <th className="md:w-48 px-8 py-4 border-b border-gray-200 bg-gray-50 text-left text-sm leading-4 font-medium text-gray-500 uppercase tracking-wider">
+                                    <th className="md:w-48 px-8 py-4 border-b border-gray-200 bg-gray-50 text-center text-sm leading-4 font-medium text-gray-500 uppercase tracking-wider">
                                         Annually
                       </th>
-                                    <th className="md:w-48 px-8 py-4 border-b border-gray-200 bg-gray-50 text-left text-sm leading-4 font-medium text-gray-500 uppercase tracking-wider">
-                                        Category
+                                    <th className="md:w-48 px-8 py-4 border-b border-gray-200 bg-gray-50 text-center text-sm leading-4 font-medium text-gray-500 uppercase tracking-wider">
+                                        Type
                       </th>
                                 </tr>
                             </thead>

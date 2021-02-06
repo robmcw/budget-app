@@ -65,7 +65,7 @@ const MonthSpendCard = (props) => {
                     </thead>
                     <tbody>
                         <tr className="hover:bg-gray-100 transition-all ease-linear duration-200 cursor-pointer" >
-                            <td className="capitalize w-1/2 whitespace-no-wrap border-b border-gray-200">
+                            <td className="capitalize w-1/2 whitespace-no-wrap">
                                 {name}
                             </td>
 

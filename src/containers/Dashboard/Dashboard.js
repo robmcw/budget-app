@@ -196,14 +196,12 @@ const Dashboard = () => {
                 <div className="flex flex-col">
                     <table className="min-w-full max-w-full">
                         <thead>
-                            <tr className="bg-white flex h-20 ">
-                                <td className="font-bold text-2m block my-auto"> New month's spending </td>
-                            </tr>
+
                             <tr className="px-4 hover:bg-gray-100 transition-all ease-linear duration-200 cursor-pointer" >
                                 <td className="w-1/2 whitespace-no-wrap">
                                     <input className=" my-4 appearance-none bg-transparent border-none w-full font-bold leading-tight focus:outline-none"
                                         type="text"
-                                        placeholder="Write month"
+                                        placeholder="New month name"
                                         aria-label="Month"
                                         ref={inputRef}
                                         onChange={event => {

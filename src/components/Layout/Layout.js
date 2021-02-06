@@ -12,7 +12,7 @@ export default function Layout(props) {
                     <div className="px-4 mb-2 text-white flex flex-col justify-between items-center">
                         <Link
                             to="/overview"
-                            className="hover:bg-gray-800 p-2 px-3 w-full rounded-md font-medium text-gray-500"
+                            className="hover:bg-gray-800 p-2 px-3 w-full rounded-md font-medium text-white"
                         >
                             Overview
             </Link>
@@ -24,7 +24,7 @@ export default function Layout(props) {
             </Link>
                         <Link
                             to="/auth/logout"
-                            className="hover:bg-gray-800 p-2 px-3 w-full rounded-md font-medium text-gray-500"
+                            className="hover:bg-gray-800 p-2 px-3 w-full rounded-md font-medium text-white"
                         >
                             Logout
             </Link>
