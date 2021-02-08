@@ -1,5 +1,37 @@
 import React from "react";
 const SpendInputRow = (props) => {
+    console.log(props.spending)
+    if (props.spending === "loading") {
+        return (
+            <tr className="animate-pulse">
+                <td className="  w-full whitespace-no-wrap flex h-6 w-1/2 rounded-sm bg-white-200">
+                </td>
+                <td className="  w-1/4 whitespace-no-wrap flex h-4  rounded-sm bg-blue-200">
+                </td>
+                <td className="  w-full whitespace-no-wrap flex h-6  rounded-sm bg-white-200">
+                </td>
+                <td className="  w-full whitespace-no-wrap flex h-4  rounded-sm bg-blue-200">
+                </td>
+                <td className="  w-full whitespace-no-wrap flex h-6  rounded-sm bg-white-200">
+                </td>
+                <td className="  w-full whitespace-no-wrap flex h-4  rounded-sm bg-blue-200">
+                </td>
+                <td className="  w-full whitespace-no-wrap flex h-6  rounded-sm bg-white-200">
+                </td>
+                <td className="  w-full whitespace-no-wrap flex h-4  rounded-sm bg-blue-200">
+                </td>
+                <td className="  w-full whitespace-no-wrap flex h-6 rounded-sm bg-white-200">
+                </td>
+                <td className="  w-full whitespace-no-wrap flex h-4  rounded-sm bg-blue-200">
+                </td>
+                <td className="  w-full whitespace-no-wrap flex h-6 rounded-sm bg-white-200">
+                </td>
+            </tr>
+
+
+
+        );
+    }
 
     return (
         < React.Fragment >

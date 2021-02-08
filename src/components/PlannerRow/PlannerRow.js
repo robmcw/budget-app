@@ -57,7 +57,7 @@ const PlannerRow = (props) => {
             <td className="border-b border-gray-200">
                 <Link className="block px-8 py-4" to={`/project/${props.budget.name}`}>
                     <div className=" text-sm leading-5 text-gray-900 font-semibold">
-                        <div class={catPillStyle}> {props.budget.category}
+                        <div className={catPillStyle}> {props.budget.category}
                         </div>
                     </div>
                 </Link>

@@ -1,6 +1,13 @@
 import React from "react";
+import LoadingCard from "../LoadingCard/LoadingCard"
 
 const MonthSpendCard = (props) => {
+
+    if (props.spending === "loading") {
+        return (
+            <LoadingCard />
+        );
+    }
 
     const name = Object.keys(props.spending.category).map((catKey) => {
         return <div
@@ -15,20 +22,33 @@ const MonthSpendCard = (props) => {
     });
 
     const spent = Object.keys(props.spending.category).map((catKey) => {
-        return <div
-            className="block px-8 py-4"
-            key={props.id + catKey} >
 
-            <div
-                className="text-sm leading-5 text-gray-900 font-semibold">
-                {props.spending.category[catKey]}
+        //Format spend as red or black 
+
+        if (props.spending.category[catKey] > props.budget[catKey].monthly) {
+            return <div
+                className="block px-8 py-4"
+                key={props.id + catKey} >
+
+                <div
+                    className="text-sm leading-5 text-red-700 font-semibold">
+                    {props.spending.category[catKey]}
+                </div>
             </div>
-        </div>
+        } else {
+            return <div
+                className="block px-8 py-4"
+                key={props.id + catKey} >
+
+                <div
+                    className="text-sm leading-5 text-gray-900 font-semibold">
+                    {props.spending.category[catKey]}
+                </div>
+            </div>
+        }
     });
 
     const budget = Object.keys(props.budget).map((cat) => {
-        console.log(cat)
-        console.log(props.budget[cat].monthly)
         return <div
             className="block px-8 py-4"
             key={props.id + cat} >

@@ -111,7 +111,7 @@ const Planner = () => {
     // If input income changes, call incomeHandler  after a delay of 2000 m/s
     useEffect(() => {
         setTimeout(() => {
-            if (enteredIncome !== 0 || inputRef.current.value) {
+            if (enteredIncome !== 0) {
                 incomeHandler(parseInt(inputRef.current ? inputRef.current.value : 0), budgets)
             };
         }, 2000);
@@ -133,18 +133,17 @@ const Planner = () => {
 
     // If user clicks SAVE, add budget to DB (could be merged with addBudgetHandler to reduce DB calls?)
     const addIncomeHandler = income => {
-        setTimeout(() => {
-            console.log("Fetching firebase to POST...")
-            fetch(`https://budget-app-c0755.firebaseio.com/income.json`, {
-                method: 'PUT',
-                body: JSON.stringify(income),
-                headers: { 'Content-Type': 'application/json' }
+
+        console.log("Fetching firebase to POST...")
+        fetch(`https://budget-app-c0755.firebaseio.com/income.json`, {
+            method: 'PUT',
+            body: JSON.stringify(income),
+            headers: { 'Content-Type': 'application/json' }
+        })
+            .then(response => {
+                setSavedIncome(income)
+                return response.json()
             })
-                .then(response => {
-                    setSavedIncome(income)
-                    return response.json()
-                })
-        }, 500);
     };
 
     // Display budget rows on page 

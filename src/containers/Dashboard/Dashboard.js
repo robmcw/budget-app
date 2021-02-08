@@ -8,6 +8,7 @@ require("firebase/database");
 // Initialize Firebase
 firebase.initializeApp(FirebaseConfig);
 
+// States
 const Dashboard = () => {
     const inputRef = useRef();
     const [budget, setBudget] = useState(0);
@@ -16,52 +17,26 @@ const Dashboard = () => {
     const [enteredSpendGroceries, setEnteredSpendGroceries] = useState(null);
     const [enteredSpendTransport, setEnteredSpendTransport] = useState(null);
     const [enteredSpendEntertainment, setEnteredSpendEntertainment] = useState(null);
-    const [savedMonthSpend, setSavedMonthSpend] = useState([
-        {
-            category: {
-                entertainment: 100,
-                groceries: 200,
-                rent: 300,
-                transport: 400
-            },
-            month: "April"
-
-        }]
+    const [savedMonthSpend, setSavedMonthSpend] = useState("loading"
     );
 
-    //Fetch data from DB 
+    //Fetch SPEND data from DB 
     useEffect(() => {
-        firebase.database().ref('spend').orderByChild('/dateCreated')
-            .on('value', snapshot => {
-                console.log(snapshot)
-                let spend = [];
-                snapshot.forEach((spendSnapshot) => {
-                    spend.push(spendSnapshot.val())
+        setTimeout(() => {
+            firebase.database().ref('spend').orderByChild('/dateCreated')
+                .on('value', snapshot => {
+                    let spend = [];
+                    snapshot.forEach((spendSnapshot) => {
+                        spend.push(spendSnapshot.val())
+                    });
+                    setSavedMonthSpend(spend)
                 });
-                console.log(spend[1].category);
-                setSavedMonthSpend(spend)
-            });
-
-        // ("Fetching firebase to GET spending...")
-        // fetch(`https://budget-app-c0755.firebaseio.com/spend.json`).then(reponse => reponse.json()
-        // ).then(responseData => {
-        //     const loadedSpend = [];
-        //     for (const key in responseData) {
-        //         loadedSpend.push({
-        //             [key]: {
-        //                 category: responseData[key].category,
-        //                 month: responseData[key].month,
-        //             }
-        //         });
-        //     }
-        //     console.log(loadedSpend)
-        //     setSavedMonthSpend(loadedSpend)
-        // })
+        }, 1000);
     }, []);
 
 
 
-    //Fetch data from DB 
+    //Fetch BUDGET data from DB 
     useEffect(() => {
         ("Fetching firebase to GET budgets...")
         fetch(`https://budget-app-c0755.firebaseio.com/budgets.json`).then(reponse => reponse.json()
@@ -71,6 +46,34 @@ const Dashboard = () => {
         })
     }, []);
 
+
+    // Post new spend to DB
+
+    const addSpendHandler = spend => {
+        console.log("Fetching firebase to POST...")
+        fetch(`https://budget-app-c0755.firebaseio.com/spend.json`, {
+            method: 'POST',
+            body: JSON.stringify(spend),
+            headers: { 'Content-Type': 'application/json' }
+        })
+            .then(response => {
+                return response.json();
+            })
+            .then(() => {
+                setSavedMonthSpend(prevInput => [
+                    ...prevInput,
+                ]);
+            }).then(() => {
+                clearFormHandler()
+            })
+    };
+
+    // Clear input form helper
+    const clearFormHandler = () => {
+        Array.from(document.querySelectorAll("input")).forEach(
+            input => (input.value = "")
+        );
+    }
 
     //Spend inputs
     const spendInput = {
@@ -83,7 +86,6 @@ const Dashboard = () => {
             entertainment: enteredSpendEntertainment
         }
     };
-
 
     const enteredSpendHandler = (input, cat) => {
         switch (cat) {
@@ -105,88 +107,48 @@ const Dashboard = () => {
     };
 
 
-    const dbObject = {
-        budgets: {
-            category: {
-                rent: {
-                    name: "Rent",
-                    percentage: 30,
-                    monthly: 700,
-                    annual: 1000,
-                    category: "Essential"
-                },
-                groceries: {
-                    name: "Groceries",
-                    percentage: 8,
-                    monthly: 150,
-                    annual: 1000,
-                    category: "Essential"
-                },
-                transport: {
-                    name: "Transport",
-                    percentage: 4,
-                    monthly: 90,
-                    annual: 1000,
-                    category: "Essential"
-                },
-                entertainment: {
-                    name: "Entertainment",
-                    percentage: 12,
-                    monthly: 310,
-                    annual: 1000,
-                    category: "Luxury"
-                }
-            },
-        },
-    };
-
-    // Call Firebase DB
-
-    const addSpendHandler = spend => {
-        console.log("Fetching firebase to POST...")
-        fetch(`https://budget-app-c0755.firebaseio.com/spend.json`, {
-            method: 'POST',
-            body: JSON.stringify(spend),
-            headers: { 'Content-Type': 'application/json' }
-        })
-            .then(response => {
-                return response.json();
+    // Return saved spends in cards
+    let months = []
+    if (savedMonthSpend !== "loading") {
+        months =
+            savedMonthSpend.map(row => {
+                const data = row
+                const id = Math.random()
+                return <MonthSpendCard
+                    key={id}
+                    spending={data}
+                    month={data.month}
+                    budget={budget}
+                />;
             })
-            .then(responseData => {
-                console.log(spend)
-                setSavedMonthSpend(prevInput => [
-                    ...prevInput,
-                    {
-                        "localId": {
-                            ...spend
-                        }
-                    }
-                ]);
-            })
-    };
-
-    const months =
-        savedMonthSpend.map(row => {
-            const data = row
-            const id = "010101"
-
-            return <MonthSpendCard
-                key={id}
-                spending={data}
-                month={data.month}
-                budget={budget}
+    } else {
+        months =
+            <MonthSpendCard
+                key={Math.random()}
+                spending={savedMonthSpend}
             />;
-        })
+    }
 
-    const inputRows = Object.keys(dbObject.budgets.category).map((catKey) => {
-        return <SpendInputRow
-            key={catKey}
-            cat={catKey}
-            enteredSpendHandler={enteredSpendHandler}
-        />;
-    });
+    // Return rows for input spend card. Linked to DB in case categories are ever updated
+    let inputRows = ""
+    if (savedMonthSpend !== "loading") {
+        inputRows = Object.keys(savedMonthSpend[0].category).map((catKey) => {
+            return <SpendInputRow
+                key={catKey}
+                cat={catKey}
+                enteredSpendHandler={enteredSpendHandler}
+            />;
+        });
+    } else {
+        console.log(savedMonthSpend)
+        inputRows =
+            <SpendInputRow
+                key={Math.random()}
+                spending={savedMonthSpend}
+            />;
+    }
 
-
+    // Return JSX
     return (
         <>
             <div className="bg-white px-8 flex h-20">
@@ -212,8 +174,7 @@ const Dashboard = () => {
                                 </td>
                             </tr>
                         </thead>
-
-                        <tbody >
+                        <tbody>
                             {inputRows}
                         </tbody>
 
@@ -229,7 +190,7 @@ const Dashboard = () => {
             </div >
             <div className="max-w-7xl mx-auto">
                 <div className="flex flex-col">
-                    <div className="bg-white">{months}</div>
+                    <div>{months}</div>
                 </div>
             </div>
         </>
