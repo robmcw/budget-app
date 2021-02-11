@@ -17,6 +17,9 @@ const Dashboard = () => {
     const [enteredSpendGroceries, setEnteredSpendGroceries] = useState(null);
     const [enteredSpendTransport, setEnteredSpendTransport] = useState(null);
     const [enteredSpendEntertainment, setEnteredSpendEntertainment] = useState(null);
+    const [enteredSpendHolidays, setEnteredSpendHolidays] = useState(null)
+    const [enteredSpendSkills, setEnteredSpendSkills] = useState(null);
+    const [enteredSpendSavings, setEnteredSpendSavings] = useState(null);
     const [savedMonthSpend, setSavedMonthSpend] = useState("loading"
     );
 
@@ -83,7 +86,10 @@ const Dashboard = () => {
             rent: enteredSpendRent,
             groceries: enteredSpendGroceries,
             transport: enteredSpendTransport,
-            entertainment: enteredSpendEntertainment
+            entertainment: enteredSpendEntertainment,
+            holidays: enteredSpendHolidays,
+            skills: enteredSpendSkills,
+            savings: enteredSpendSavings
         }
     };
 
@@ -100,6 +106,15 @@ const Dashboard = () => {
                 break;
             case 'entertainment':
                 setEnteredSpendEntertainment(input)
+                break;
+                case 'holidays':
+                setEnteredSpendHolidays(input)
+                break;
+                case 'skills':
+                setEnteredSpendSkills(input)
+                break;
+                case 'savings':
+                setEnteredSpendSavings(input)
                 break;
             default:
                 console.error('ERROR: NO CATEGORIES MATCHED')
@@ -132,7 +147,7 @@ const Dashboard = () => {
     // Return rows for input spend card. Linked to DB in case categories are ever updated
     let inputRows = ""
     if (savedMonthSpend !== "loading") {
-        inputRows = Object.keys(savedMonthSpend[0].category).map((catKey) => {
+        inputRows = Object.keys(budget).map((catKey) => { 
             return <SpendInputRow
                 key={catKey}
                 cat={catKey}

@@ -15,6 +15,12 @@ const Planner = () => {
     const [annualTransport, SetAnnualTransport] = useState(0);
     const [monthlyEntertainment, SetMonthlyEntertainment] = useState(0);
     const [annualEntertainment, SetAnnualEntertainment] = useState(0);
+    const [monthlyHolidays, SetMonthlyHolidays] = useState(0);
+    const [annualHolidays, SetAnnualHolidays] = useState(0);
+    const [monthlySkills, SetMonthlySkills] = useState(0);
+    const [annualSkills, SetAnnualSkills] = useState(0);
+    const [monthlySavings, SetMonthlySavings] = useState(0);
+    const [annualSavings, SetAnnualSavings] = useState(0);
 
     //Fetch budget data from DB and update states to update datatable
     useEffect(() => {
@@ -53,7 +59,7 @@ const Planner = () => {
 
         groceries: {
             name: "Groceries",
-            percentage: 8,
+            percentage: 10,
             monthly: monthlyGroceries,
             annual: annualGroceries,
             category: "Essential"
@@ -69,9 +75,30 @@ const Planner = () => {
         },
         transport: {
             name: "Transport",
-            percentage: 4,
+            percentage: 10,
             monthly: monthlyTransport,
             annual: annualTransport,
+            category: "Essential"
+        },
+        holidays: {
+            name: "Holidays",
+            percentage: 20,
+            monthly: monthlyHolidays,
+            annual: annualHolidays,
+            category: "Luxury"
+        },
+        skills: {
+            name: "Skills",
+            percentage: 10,
+            monthly: monthlySkills,
+            annual: annualSkills,
+            category: "Luxury"
+        },
+        savings: {
+            name: "Savings",
+            percentage: 20,
+            monthly: monthlySavings,
+            annual: annualSavings,
             category: "Savings"
         },
     };
@@ -100,6 +127,21 @@ const Planner = () => {
                 case 'Entertainment':
                     SetMonthlyEntertainment(newMonthly)
                     SetAnnualEntertainment(newAnnual)
+                    break;
+
+                case 'Holidays':
+                    SetMonthlyHolidays(newMonthly)
+                    SetAnnualHolidays(newAnnual)
+                    break;
+
+                case 'Skills':
+                    SetMonthlySkills(newMonthly)
+                    SetAnnualSkills(newAnnual)
+                    break;
+
+                case 'Savings':
+                    SetMonthlySavings(newMonthly)
+                    SetAnnualSavings(newAnnual)
                     break;
 
                 default:
@@ -146,11 +188,12 @@ const Planner = () => {
             })
     };
 
-    // Display budget rows on page 
-
+    // Display budget rows 
     const tableRows = Object.keys(budgets).map((catKey) => {
         return <PlannerRow key={catKey} budget={budgets[catKey]} />;
     });
+
+    // Return JSX
     return (
         <>
             <div className="bg-white py-2 px-4 flex h-20 border-b border-gray-300">
@@ -174,8 +217,6 @@ const Planner = () => {
                     </input>
                 </div>
             </form>
-
-
 
             <div className="max-w-7xl mx-4 my-2 px-4 py-2">
                 <div className="flex flex-col">

@@ -47,7 +47,7 @@ const MonthSpendCard = (props) => {
             </div>
         }
     });
-
+console.log(props.budget)
     const budget = Object.keys(props.budget).map((cat) => {
         return <div
             className="block px-8 py-4"

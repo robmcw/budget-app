@@ -1,6 +1,5 @@
 import React from "react";
 const SpendInputRow = (props) => {
-    console.log(props.spending)
     if (props.spending === "loading") {
         return (
             <tr className="animate-pulse">
