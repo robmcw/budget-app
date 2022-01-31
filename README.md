@@ -1,3 +1,11 @@
+## Budget App
+
+A single page web app built with React, Tailwind and Firebase, built to replicate the spreadsheets that I use to keep track of my spending. The app consists of two main pages: Planner and Overview.
+
+In Planner, a user can input their salary and the app will automatically create a recommended budget for each category. They can save this as their budget.
+
+In Overview, a user can input their monthly spending. Spending will be instantly compared to their budget and be tagged as over or under budget accordingly. 
+
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
 ## Available Scripts
